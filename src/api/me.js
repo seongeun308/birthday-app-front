@@ -1,16 +1,12 @@
-export async function fetchMe() {
+import axios from "axios";
+
+export const fetchMe = async () => {
   const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:8080/me", {
-    method: "GET",
-    headers: { 
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
-   }
+  if (!token) throw new Error("No token found");
+
+  const res = await axios.get("http://localhost:8080/me", {
+    headers: { Authorization: `Bearer ${token}` },
   });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch user info");
-  }
-
-  return res.json();
-}
+  
+  return res.data.data;
+};

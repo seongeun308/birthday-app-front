@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-
   const loginMutation = useLogin();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,42 +14,34 @@ export default function LoginForm() {
       { email, password },
       {
         onSuccess: () => {
-          navigate("/"); // 로그인 성공 후 홈으로 이동
+          navigate("/");
         },
       }
     );
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-8 w-96 bg-white rounded shadow-md"
-    >
-      <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-sm mx-auto">
       <input
         type="email"
-        placeholder="Email"
+        placeholder="이메일"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full p-2 mb-4 border rounded"
-        required
+        className="border p-2 rounded"
       />
       <input
         type="password"
-        placeholder="Password"
+        placeholder="비밀번호"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="w-full p-2 mb-4 border rounded"
-        required
+        className="border p-2 rounded"
       />
-      {loginMutation.isError && (
-        <p className="text-red-500 mb-4">{loginMutation.error.message}</p>
-      )}
       <button
         type="submit"
-        className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+        disabled={loginMutation.isLoading}
       >
-        Login
+        {loginMutation.isLoading ? "로그인 중..." : "로그인"}
       </button>
     </form>
   );
